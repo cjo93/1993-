@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*.log
+*.egg-info/
+
+# Virtualenvs
+.venv/
+venv/
+ENV/
+env/
+
+# Caches & OS junk
+.uf_cache/
+.DS_Store
+
+# Frontend (future)
+node_modules/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
