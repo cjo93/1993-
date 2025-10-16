@@ -1,0 +1,22 @@
+name: CI Smoke
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/ci-smoke.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p /tmp/logs
+      - run: echo "hello from $(uname -a)" | tee /tmp/logs/hello.txt
+      - uses: actions/upload-artifact@v4
+        with:
+            name: smoke-logs
+            path: /tmp/logs
