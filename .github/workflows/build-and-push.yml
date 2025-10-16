@@ -22,11 +22,14 @@ jobs:
 
       - name: Build and push
         env:
-          REPO: ${{ github.repository }}
+          IMAGE: ghcr.io/cjo93/defrag
+          SHA: ${{ github.sha }}
         run: |
-          IMAGE="ghcr.io/${REPO,,}:latest"
-          docker build -t "$IMAGE" -f unified_field_v0/Dockerfile .
-          docker push "$IMAGE"
+          docker build -t "$IMAGE:latest" -t "$IMAGE:$SHA" -f unified_field_v0/Dockerfile .
+          docker push "$IMAGE:latest"
+          docker push "$IMAGE:$SHA"
 
       - name: Summary
-        run: echo "Pushed image to ghcr.io/${GITHUB_REPOSITORY,,}:latest" >> $GITHUB_STEP_SUMMARY
+        env:
+          IMAGE: ghcr.io/cjo93/defrag
+        run: echo "Pushed $IMAGE:latest" >> $GITHUB_STEP_SUMMARY
