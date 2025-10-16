@@ -1,0 +1,59 @@
+name: Simple Docker → GHCR
+on:
+  push:
+    branches: [main]
+    paths:
+      - "unified_field_v0/**"
+      - ".github/workflows/simple-docker.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Env & Docker info
+        run: |
+          set -euxo pipefail
+          docker version || true
+          docker info || true
+          uname -a || true
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Build (plain docker)
+        env:
+          IMAGE: ghcr.io/cjo93/defrag
+        run: |
+          set -euxo pipefail
+          mkdir -p /tmp/logs
+          {
+            echo "==> Building ${IMAGE}:${GITHUB_SHA}"
+            docker build -t "${IMAGE}:${GITHUB_SHA}" -t "${IMAGE}:latest" -f unified_field_v0/Dockerfile unified_field_v0
+          } 2>&1 | tee /tmp/logs/build.txt
+
+      - name: Push
+        if: success()
+        env:
+          IMAGE: ghcr.io/cjo93/defrag
+        run: |
+          set -euxo pipefail
+          {
+            echo "==> Pushing ${IMAGE}:${GITHUB_SHA} and :latest"
+            docker push "${IMAGE}:${GITHUB_SHA}"
+            docker push "${IMAGE}:latest"
+          } 2>&1 | tee /tmp/logs/push.txt
+
+      - name: Always collect logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-logs
+          path: /tmp/logs
