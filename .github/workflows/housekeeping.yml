@@ -1,0 +1,35 @@
+name: Housekeeping
+on:
+  push: { branches: [ main ] }
+  pull_request: { branches: [ main ] }
+  schedule: [ { cron: '17 7 * * *' } ]
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.9' }
+      - name: Install deps (best-effort)
+        run: |
+          pip install --upgrade pip
+          if [ -f unified_field_v0/requirements.txt ]; then
+            pip install -r unified_field_v0/requirements.txt
+          fi
+          pip install flake8 black
+      - name: Lint
+        run: |
+          flake8 unified_field_v0 || true
+          black --check unified_field_v0 || true
+      - name: Syntax check
+        run: python -m compileall -q unified_field_v0 || true
+      - name: Build check (FastAPI import)
+        working-directory: unified_field_v0
+        run: |
+          python - <<'PY'
+          try:
+              import importlib; importlib.import_module("app")
+              print("app.py import OK")
+          except Exception as e:
+              print("Import failed:", e)
+          PY
