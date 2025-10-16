@@ -1,0 +1,32 @@
+name: Build & Push API Image
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "unified_field_v0/**"
+      - ".github/workflows/build-and-push.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build and push
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          IMAGE="ghcr.io/${REPO,,}:latest"
+          docker build -t "$IMAGE" -f unified_field_v0/Dockerfile .
+          docker push "$IMAGE"
+
+      - name: Summary
+        run: echo "Pushed image to ghcr.io/${GITHUB_REPOSITORY,,}:latest" >> $GITHUB_STEP_SUMMARY

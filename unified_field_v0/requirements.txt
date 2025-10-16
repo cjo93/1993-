@@ -1,7 +1,2 @@
 fastapi==0.115.0
 uvicorn==0.30.6
-requests==2.32.3
-python-dateutil==2.9.0.post0
-pytz==2024.1
-cryptography==43.0.1
-matplotlib==3.9.2
