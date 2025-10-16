@@ -22,19 +22,9 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/metadata-action@v5
-        id: meta
-        with:
-          images: ghcr.io/cjo93/defrag
-          tags: |
-            type=raw,value=latest
-            type=sha
       - uses: docker/build-push-action@v6
         with:
           context: .
           file: unified_field_v0/Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-      - name: Summary
-        run: echo "Pushed: ${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
+          tags: ghcr.io/cjo93/defrag:latest,ghcr.io/cjo93/defrag:${{ github.sha }}
