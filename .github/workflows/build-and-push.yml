@@ -28,7 +28,7 @@ jobs:
       - uses: docker/build-push-action@v6
         with:
           context: ./unified_field_v0
-          file: ./unified_field_v0/Dockerfile
+          file: Dockerfile
           push: true
           tags: |
             ghcr.io/cjo93/defrag:latest
