@@ -17,19 +17,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Log in to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - uses: docker/setup-buildx-action@v3
 
-      - name: Build and push
-        env:
-          IMAGE: ghcr.io/cjo93/defrag
-          SHA: ${{ github.sha }}
-        run: |
-          docker build -t "$IMAGE:latest" -t "$IMAGE:$SHA" -f unified_field_v0/Dockerfile .
-          docker push "$IMAGE:latest"
-          docker push "$IMAGE:$SHA"
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/metadata-action@v5
+        id: meta
+        with:
+          images: ghcr.io/cjo93/defrag
+          tags: |
+            type=raw,value=latest
+            type=sha
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: unified_field_v0/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Summary
-        env:
-          IMAGE: ghcr.io/cjo93/defrag
-        run: echo "Pushed $IMAGE:latest" >> $GITHUB_STEP_SUMMARY
+        run: echo "Pushed: ${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
