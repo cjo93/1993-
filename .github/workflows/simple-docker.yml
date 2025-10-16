@@ -15,44 +15,37 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Prepare logs dir
-        run: mkdir -p /tmp/logs
+      - run: mkdir -p /tmp/logs
 
-      - name: Env & Docker info
+      - name: Docker info
         run: |
           set -euxo pipefail
           docker version || true
           docker info || true
-          uname -a || true
 
-      - name: Login to GHCR (PAT)
+      - name: Login to GHCR (GITHUB_TOKEN)
         env:
-          PAT: ${{ secrets.GHCR_PAT }}
-        run: echo "${PAT}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
-
-      - name: Build (root context, repo Dockerfile)
-        env:
-          IMAGE: ghcr.io/cjo93/defrag
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -euxo pipefail
-          {
-            echo "==> Building ${IMAGE}:${GITHUB_SHA}"
-            docker build -t "${IMAGE}:${GITHUB_SHA}" -t "${IMAGE}:latest" -f unified_field_v0/Dockerfile .
-          } 2>&1 | tee /tmp/logs/01_build.txt
+          echo "${TOKEN}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin |& tee /tmp/logs/00_login.txt
 
-      - name: Push to GHCR
+      - name: Build
         env:
-          IMAGE: ghcr.io/cjo93/defrag
+          IMAGE: ghcr.io/${{ github.repository_owner }}/defrag
         run: |
           set -euxo pipefail
-          {
-            echo "==> Pushing ${IMAGE}:${GITHUB_SHA} and :latest"
-            docker push "${IMAGE}:${GITHUB_SHA}"
-            docker push "${IMAGE}:latest"
-          } 2>&1 | tee /tmp/logs/02_push.txt
+          docker build -t "${IMAGE}:${GITHUB_SHA}" -t "${IMAGE}:latest" -f unified_field_v0/Dockerfile . |& tee /tmp/logs/01_build.txt
+
+      - name: Push
+        env:
+          IMAGE: ghcr.io/${{ github.repository_owner }}/defrag
+        run: |
+          set -euxo pipefail
+          docker push "${IMAGE}:${GITHUB_SHA}" |& tee /tmp/logs/02_push_sha.txt
+          docker push "${IMAGE}:latest"       |& tee /tmp/logs/03_push_latest.txt
 
       - name: Upload CI logs (always)
         if: always()
@@ -60,4 +53,4 @@ jobs:
         with:
           name: ci-logs
           path: /tmp/logs
-          if-no-files-found: ignore
+          if-no-files-found: warn
