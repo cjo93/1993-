@@ -1,0 +1,49 @@
+openapi: 3.0.3
+info:
+  title: DEFRAG API
+  version: 0.1.0
+servers:
+  - url: https://api.defrag.app
+paths:
+  /healthz:
+    get:
+      summary: Health check
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: { type: object, properties: { status: { type: string, enum: [ok] } }, required: [status] }
+  /:
+    get:
+      summary: Root (auth required)
+      security: [{ ApiKeyAuth: [] }]
+      responses:
+        '401': { description: Unauthorized }
+  /classify:
+    post:
+      summary: Classify text (stub)
+      security: [{ ApiKeyAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object, properties: { text: { type: string } }, required: [text] }
+      responses:
+        '200':
+          description: Stubbed response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok: { type: boolean }
+                  label: { type: string }
+                  score: { type: number }
+                required: [ok, label, score]
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
