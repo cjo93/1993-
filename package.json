@@ -1,0 +1,24 @@
+{
+  "name": "defrag",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p .",
+    "lint": "eslint . --ext .ts",
+    "typecheck": "tsc -p . --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20251011.0",
+    "@types/jest": "^29.5.12",
+    "@typescript-eslint/eslint-plugin": "^8.46.1",
+    "@typescript-eslint/parser": "^8.46.1",
+    "@vitest/ui": "^3.2.4",
+    "eslint": "^9.38.0",
+    "vitest": "^3.2.4",
+    "wrangler": "^3.67.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
