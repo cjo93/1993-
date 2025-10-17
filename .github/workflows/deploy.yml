@@ -4,16 +4,21 @@ on:
     branches: [ main ]
 jobs:
   deploy:
+    if: ${{ secrets.CF_API_TOKEN && secrets.CF_ACCOUNT_ID }}
     runs-on: ubuntu-latest
     environment: production
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
       - name: Install Wrangler
-        run: npm i -g wrangler
+        run: npm i -g wrangler@3
+        env:
+          WRANGLER_SEND_ANALYTICS: false
       - name: Deploy Worker
-        run: wrangler deploy
+        run: wrangler deploy --config wrangler.toml --env production --no-bundle
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
