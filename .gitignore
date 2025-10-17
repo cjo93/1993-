@@ -1,28 +1,20 @@
-# Python
-__pycache__/
-*.py[cod]
-*.log
-*.egg-info/
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
 
-# Virtualenvs
-.venv/
-venv/
-ENV/
-env/
+# Testing
+/coverage
 
-# Caches & OS junk
-.uf_cache/
-.DS_Store
+# Build
+/dist
+/build
+.wrangler/
 
-# Frontend (future)
-node_modules/
-dist/
-build/
-
-# IDE
-.vscode/
+# IDEs
 .idea/
+.vscode/
 
-sa-key.json
-
-sa-key.json
+# OS
+.DS_Store
+*.swp
