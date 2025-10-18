@@ -1,4 +1,27 @@
-// Placeholder; Stripe verification & D1 writes in Issue 10
-export async function recordPayment(/* env: Env, data: { id: string; ts: number; amount: number; email_hash: string } */) {
-  // no-op stub until D1 bindings in place
+import { sha256Hex } from "./hash";
+
+type PaymentsEnv = {
+  DB: D1Database;
+};
+
+type PaymentRecord = {
+  id: string;
+  ts: number;
+  amount: number;
+  email?: string | null;
+};
+
+export async function recordPayment(env: PaymentsEnv, data: PaymentRecord): Promise<void> {
+  if (!env?.DB) {
+    return;
+  }
+
+  const ts = Math.trunc(data.ts);
+  const emailHash = data.email ? await sha256Hex(data.email.toLowerCase()) : null;
+
+  await env.DB.prepare(
+    `INSERT OR IGNORE INTO payments (id, ts, amount, email_hash) VALUES (?, ?, ?, ?)`
+  )
+    .bind(data.id, ts, data.amount, emailHash)
+    .run();
 }
