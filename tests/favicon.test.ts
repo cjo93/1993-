@@ -1,19 +1,18 @@
-import { unstable_dev } from "wrangler";
-import type { Unstable_DevWorker } from "wrangler";
-
-let worker: Unstable_DevWorker;
-
-beforeAll(async () => {
-  worker = await unstable_dev("src/worker.ts", { experimental: { disableExperimentalWarning: true }});
-});
-
-afterAll(async () => {
-  await worker.stop();
-});
+import worker from "../src/worker";
+import { createExecutionContext, createTestEnv } from "./helpers";
 
 describe("favicon bypass", () => {
   test("GET /favicon.ico returns 204 and no auth required", async () => {
-    const res = await worker.fetch("/favicon.ico");
+    const env = createTestEnv();
+    const ctx = createExecutionContext();
+    const res = await worker.fetch(
+      new Request("https://defrag.example/favicon.ico", {
+        headers: { "cf-connecting-ip": "198.51.100.3" },
+      }),
+      env,
+      ctx as unknown as ExecutionContext
+    );
+    await ctx.waitForAll();
     expect(res.status).toBe(204);
   });
 });
