@@ -1,0 +1,23 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: unified-field-engine
+spec:
+  template:
+    metadata:
+      annotations:
+        autoscaling.knative.dev/minScale: "0"
+        autoscaling.knative.dev/maxScale: "10"
+    spec:
+      containers:
+        - image: REGION-docker.pkg.dev/PROJECT/REPO/unified-field-engine:latest
+          env:
+            - name: UF_CACHE
+              value: /tmp/cache
+            - name: API_KEY_MASTER
+              valueFrom:
+                secretKeyRef: {name: api-key-master, key: value}
+          resources:
+            limits:
+              cpu: "1"
+              memory: 512Mi

@@ -1,0 +1,76 @@
+{
+  "created_utc": "2025-10-15T20:05:30Z",
+  "zip_file": "/mnt/data/unified_field_v0.6_ready.zip",
+  "files": [
+    {
+      "path": "app.py",
+      "bytes": 4904,
+      "sha256": "959a91b08fafff1923f691a0946cd0056e5992fef191dcc98972a5ef8eb2218f"
+    },
+    {
+      "path": "astro_utils.py",
+      "bytes": 3876,
+      "sha256": "601b733424f1d7648a84ff0691e40298bed630a72f934e3e503b10aa88e136a2"
+    },
+    {
+      "path": "horizons_client.py",
+      "bytes": 2573,
+      "sha256": "64514f76e72205cbb34445908997f6a48ed1647925018f044971f4a0580db8da"
+    },
+    {
+      "path": "mandala_renderer.py",
+      "bytes": 3417,
+      "sha256": "ebf0c9a4d082ed36954701bf69a5ad1f25552c60f31209869c46324db4638b48"
+    },
+    {
+      "path": "auth.py",
+      "bytes": 785,
+      "sha256": "3f8561f360869cdb96115282aa0fd9726e2159e19e43fc13a52f99c4508ea2d6"
+    },
+    {
+      "path": "billing.py",
+      "bytes": 304,
+      "sha256": "0756170faf993a753643e17bc36bf51993f496f68147e7ba9e8b7b8f34e92ce0"
+    },
+    {
+      "path": "plans.json",
+      "bytes": 179,
+      "sha256": "9f2dfffe0ffbc27146b697586d850df75efb28c3b20e9745241a19f7fa9b4d1b"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 131,
+      "sha256": "35a72337c5a7689071ca113fba0236528b07bfc9d8ba34a4db62b9542372d56f"
+    },
+    {
+      "path": "Dockerfile",
+      "bytes": 202,
+      "sha256": "4ced02717054c37eb1a2e8db51f490e0da7fd0daf069a98f07a20e8905c4b721"
+    },
+    {
+      "path": "cloudrun.yaml",
+      "bytes": 633,
+      "sha256": "7687703d005dd5a8bbe03f2b83d596b159227e214a4c37eab1dc3436cfb0767d"
+    },
+    {
+      "path": ".env.template",
+      "bytes": 131,
+      "sha256": "e3e470bbeca6e48708cd173aeb79f842668480bdb4e5e9d53b2483c7484fa0a0"
+    },
+    {
+      "path": "README.md",
+      "bytes": 387,
+      "sha256": "faaf708eacccd7d6aef7053e35018d06836bac7eb35a3e8715cd4b45ba328f4b"
+    },
+    {
+      "path": ".github/workflows/deploy.yml",
+      "bytes": 1437,
+      "sha256": "b8099185c9e4991ebfc1e7b24d47532d6bff36e4285c1e2f8fc34ad5817c88fc"
+    },
+    {
+      "path": "static/index.html",
+      "bytes": 844,
+      "sha256": "0db0e9d3a4e72d8372a7527a214d06155edb91c26e7497df0269c71b685f051c"
+    }
+  ]
+}

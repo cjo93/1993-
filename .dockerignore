@@ -1,0 +1,8 @@
+.venv
+__pycache__/
+.uf_cache
+.git
+.gitignore
+*.log
+*.tmp
+*.cache
